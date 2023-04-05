@@ -1,6 +1,7 @@
 using Elements;
 using Elements.Geometry;
 using Elements.Spatial;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace OpenLayoutDemo
@@ -20,7 +21,7 @@ namespace OpenLayoutDemo
 
             var spacePlanningZones = inputModels["Space Planning Zones"];
             var roomBoundaries = spacePlanningZones.AllElementsOfType<SpaceBoundary>().Where(b => b.Name == "Data Hall").ToList();
-            var objects = inputModels["any"].Elements.Where(x => x.Value.AdditionalProperties.ContainsKey("Category") && input.Extract.Select(y => y.Category).ToList().Contains(x.Value.AdditionalProperties["Category"])).ToList();
+            var objects = inputModels["Foo"].Elements.Where(x => x.Value.AdditionalProperties.ContainsKey("Category") && input.Extract.Select(y => y.Category).ToList().Contains(x.Value.AdditionalProperties["Category"])).ToList();
 
             var model = new Model();
             var warnings = new List<string>();
@@ -29,8 +30,6 @@ namespace OpenLayoutDemo
             {
                 MeshElement modelObject = (MeshElement)obj.Value;
                 modelObject.IsElementDefinition = true;
-                // MeshElement model_ = obj.Value..Mesh;
-                // var modelObject = obj.Value;
 
                 var totalArea = 0.0;
                 var width = modelObject.Mesh.BoundingBox.Max.X - modelObject.Mesh.BoundingBox.Min.X;
@@ -97,6 +96,13 @@ namespace OpenLayoutDemo
             var output = new OpenLayoutDemoOutputs(0);
             output.Model = model;
             output.Warnings.AddRange(warnings);
+
+            // serialize JSON directly to a file
+            // using (StreamWriter file = File.CreateText(@"/Users/jamesbradleym/Desktop/model.json"))
+            // {
+            //     JsonSerializer serializer = new JsonSerializer();
+            //     serializer.Serialize(file, model);
+            // }
 
             // watch.Stop();
             // var time = watch.ElapsedMilliseconds;
