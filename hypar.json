@@ -1,0 +1,54 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "id": "4d0fc267-9560-42b4-a9be-d075e0bfc4e3",
+  "name": "Open Layout - Demo",
+  "description": "The OpenLayoutDemo function.",
+  "language": "C#",
+  "model_output": "Object Layout",
+  "model_dependencies": [
+    {
+      "autohide": false,
+      "name": "Space Planning Zones",
+      "optional": false
+    },
+    {
+      "autohide": false,
+      "name": "any",
+      "optional": false
+    }
+  ],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "Extract": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "$hyparStyle": "row",
+          "properties": {
+            "Category": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "$hyparOrder": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "outputs": [
+    {
+      "name": "Instances",
+      "description": "The number of placed instances.",
+      "type": "number"
+    }
+  ],
+  "element_types": [
+    "https://prod-api.hypar.io/schemas/SpaceBoundary"
+  ],
+  "repository_url": "https://github.com/hypar-io/function",
+  "last_updated": "0001-01-01T00:00:00",
+  "cli_version": "1.6.0"
+}
