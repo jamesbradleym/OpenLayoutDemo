@@ -57,15 +57,16 @@ namespace OpenLayoutDemo
     
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Extract(string @category)
+        public Extract(string @category, string @program)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Extract>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @category});
+                validator.PreConstruct(new object[]{ @category, @program});
             }
         
             this.Category = @category;
+            this.Program = @program;
         
             if(validator != null)
             {
@@ -75,6 +76,9 @@ namespace OpenLayoutDemo
     
         [Newtonsoft.Json.JsonProperty("Category", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Category { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Program", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Program { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     

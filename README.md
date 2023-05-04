@@ -2,7 +2,7 @@
 
 # Open Layout - Demo
 
-The OpenLayoutDemo function.
+The Open Layout Demo function.
 
 |Input Name|Type|Description|
 |---|---|---|
