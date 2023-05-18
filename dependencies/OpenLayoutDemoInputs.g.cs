@@ -57,16 +57,22 @@ namespace OpenLayoutDemo
     
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Extract(string @category, string @program)
+        public Extract(string @category, string @program, string @layout, double @aisle, double @gap, double @forward, double @backward, bool @showPattern)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Extract>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @category, @program});
+                validator.PreConstruct(new object[]{ @category, @program, @layout, @aisle, @gap, @forward, @backward, @showPattern});
             }
         
             this.Category = @category;
             this.Program = @program;
+            this.Layout = @layout;
+            this.Aisle = @aisle;
+            this.Gap = @gap;
+            this.Forward = @forward;
+            this.Backward = @backward;
+            this.ShowPattern = @showPattern;
         
             if(validator != null)
             {
@@ -79,6 +85,29 @@ namespace OpenLayoutDemo
     
         [Newtonsoft.Json.JsonProperty("Program", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Program { get; set; }
+    
+        /// <summary>What layout strategy should be used?</summary>
+        [Newtonsoft.Json.JsonProperty("Layout", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Layout { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Aisle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        public double Aisle { get; set; } = 2D;
+    
+        [Newtonsoft.Json.JsonProperty("Gap", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Range(0.001D, double.MaxValue)]
+        public double Gap { get; set; } = 0.001D;
+    
+        [Newtonsoft.Json.JsonProperty("Forward", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        public double Forward { get; set; } = 0D;
+    
+        [Newtonsoft.Json.JsonProperty("Backward", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        public double Backward { get; set; } = 0D;
+    
+        [Newtonsoft.Json.JsonProperty("Show Pattern", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool ShowPattern { get; set; } = false;
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     

@@ -15,11 +15,6 @@
       "autohide": false,
       "name": "Foo",
       "optional": false
-    },
-    {
-      "autohide": false,
-      "name": "Flexible Zones",
-      "optional": false
     }
   ],
   "input_schema": {
@@ -43,10 +38,89 @@
                 "string",
                 "null"
               ],
+              "$hyparOrder": 1,
               "$hyparEnumQuery": {
-                "query": "[*discriminator=Elements.FlexZone].Program Type",
-                "dependency": "Flexible Zones"
+                "query": "[*discriminator=Elements.SpaceBoundary].Program Type",
+                "dependency": "Space Planning Zones"
               }
+            },
+            "Layout": {
+              "description": "What layout strategy should be used?",
+              "type": "string",
+              "$hyparAutocomplete": [
+                "Row",
+                "Cell"
+              ],
+              "$hyparOrder": 2
+            },
+            "Aisle": {
+              "type": "number",
+              "default": 2.0,
+              "minimum": 0.0,
+              "$hyparShowIf": {
+                "conditions": [
+                  {
+                    "property": "Layout",
+                    "value": "Row"
+                  }
+                ]
+              },
+              "$hyparOrder": 3
+            },
+            "Gap": {
+              "type": "number",
+              "default": 0.001,
+              "minimum": 0.001,
+              "$hyparShowIf": {
+                "conditions": [
+                  {
+                    "property": "Layout",
+                    "value": "Row"
+                  }
+                ]
+              },
+              "$hyparOrder": 4
+            },
+            "Forward": {
+              "type": "number",
+              "default": 0.0,
+              "minimum": 0.0,
+              "$hyparShowIf": {
+                "conditions": [
+                  {
+                    "property": "Layout",
+                    "value": "Row"
+                  }
+                ]
+              },
+              "$hyparOrder": 5
+            },
+            "Backward": {
+              "type": "number",
+              "default": 0.0,
+              "minimum": 0.0,
+              "$hyparShowIf": {
+                "conditions": [
+                  {
+                    "property": "Layout",
+                    "value": "Row"
+                  }
+                ]
+              },
+              "$hyparOrder": 6
+            },
+            "Show Pattern": {
+              "type": "boolean",
+              "default": false,
+              "$hyparShowIf": {
+                "conditions": [
+                  {
+                    "property": "Layout",
+                    "value": "Row"
+                  }
+                ]
+              },
+              "$hyparOrder": 20
             }
           }
         }
@@ -61,8 +135,7 @@
     }
   ],
   "element_types": [
-    "https://prod-api.hypar.io/schemas/SpaceBoundary",
-    "FlexibleZone.json"
+    "https://prod-api.hypar.io/schemas/SpaceBoundary"
   ],
   "repository_url": "https://github.com/hypar-io/function",
   "last_updated": "0001-01-01T00:00:00",
