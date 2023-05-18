@@ -27,11 +27,16 @@
           "$hyparStyle": "row",
           "properties": {
             "Category": {
+              "description": "Select the Rhino model category to work with",
               "type": [
                 "string",
                 "null"
               ],
-              "$hyparOrder": 0
+              "$hyparOrder": 0,
+              "$hyparEnumQuery": {
+                "query": "[*discriminator=Elements.MeshElement].Category",
+                "dependency": "Foo"
+              }
             },
             "Program": {
               "type": [

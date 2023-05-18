@@ -80,6 +80,7 @@ namespace OpenLayoutDemo
             }
         }
     
+        /// <summary>Select the Rhino model category to work with</summary>
         [Newtonsoft.Json.JsonProperty("Category", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Category { get; set; }
     
