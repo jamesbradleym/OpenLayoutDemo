@@ -114,6 +114,20 @@
               },
               "$hyparOrder": 6
             },
+            "Inset": {
+              "type": "number",
+              "default": 0.0,
+              "minimum": 0.0,
+              "$hyparShowIf": {
+                "conditions": [
+                  {
+                    "property": "Layout",
+                    "value": "Row"
+                  }
+                ]
+              },
+              "$hyparOrder": 6
+            },
             "Show Pattern": {
               "type": "boolean",
               "default": false,

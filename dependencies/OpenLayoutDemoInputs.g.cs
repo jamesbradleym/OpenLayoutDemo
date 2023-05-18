@@ -57,12 +57,12 @@ namespace OpenLayoutDemo
     
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Extract(string @category, string @program, string @layout, double @aisle, double @gap, double @forward, double @backward, bool @showPattern)
+        public Extract(string @category, string @program, string @layout, double @aisle, double @gap, double @forward, double @backward, double @inset, bool @showPattern)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Extract>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @category, @program, @layout, @aisle, @gap, @forward, @backward, @showPattern});
+                validator.PreConstruct(new object[]{ @category, @program, @layout, @aisle, @gap, @forward, @backward, @inset, @showPattern});
             }
         
             this.Category = @category;
@@ -72,6 +72,7 @@ namespace OpenLayoutDemo
             this.Gap = @gap;
             this.Forward = @forward;
             this.Backward = @backward;
+            this.Inset = @inset;
             this.ShowPattern = @showPattern;
         
             if(validator != null)
@@ -106,6 +107,10 @@ namespace OpenLayoutDemo
         [Newtonsoft.Json.JsonProperty("Backward", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
         public double Backward { get; set; } = 0D;
+    
+        [Newtonsoft.Json.JsonProperty("Inset", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        public double Inset { get; set; } = 0D;
     
         [Newtonsoft.Json.JsonProperty("Show Pattern", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool ShowPattern { get; set; } = false;

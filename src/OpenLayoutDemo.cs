@@ -79,7 +79,7 @@ namespace OpenLayoutDemo
             var profile = room.Boundary;
             totalArea += profile.Area();
             //inset from walls
-            var inset = profile.Perimeter.Offset(-1.2);
+            var inset = profile.Perimeter.Offset(-extract.Inset);
             Line longestEdge = null;
             try
             {
