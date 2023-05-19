@@ -29,16 +29,17 @@ namespace OpenLayoutDemo
     {
         [Newtonsoft.Json.JsonConstructor]
         
-        public OpenLayoutDemoInputs(IList<Extract> @extract, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey):
+        public OpenLayoutDemoInputs(IList<Extract> @extract, Overrides @overrides, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey):
         base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<OpenLayoutDemoInputs>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @extract});
+                validator.PreConstruct(new object[]{ @extract, @overrides});
             }
         
             this.Extract = @extract;
+            this.Overrides = @overrides ?? this.Overrides;
         
             if(validator != null)
             {
@@ -49,6 +50,9 @@ namespace OpenLayoutDemo
         [Newtonsoft.Json.JsonProperty("Extract", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Extract> Extract { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("overrides", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Overrides Overrides { get; set; } = new Overrides();
+    
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
@@ -57,22 +61,153 @@ namespace OpenLayoutDemo
     
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Extract(string @category, string @program, string @layout, double @aisle, double @gap, double @forward, double @backward, double @inset, bool @showPattern)
+        public Extract(string @category, string @program)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Extract>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @category, @program, @layout, @aisle, @gap, @forward, @backward, @inset, @showPattern});
+                validator.PreConstruct(new object[]{ @category, @program});
             }
         
             this.Category = @category;
             this.Program = @program;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
+        }
+    
+        /// <summary>Select the Rhino model category to work with.</summary>
+        [Newtonsoft.Json.JsonProperty("Category", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Category { get; set; }
+    
+        /// <summary>Select the Space Planning Type to work within.</summary>
+        [Newtonsoft.Json.JsonProperty("Program", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Program { get; set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
+    
+    public partial class Overrides 
+    
+    {
+        public Overrides() { }
+        
+        [Newtonsoft.Json.JsonConstructor]
+        public Overrides(IList<OpenSpaceSettingsOverride> @openSpaceSettings)
+        {
+            var validator = Validator.Instance.GetFirstValidatorForType<Overrides>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @openSpaceSettings});
+            }
+        
+            this.OpenSpaceSettings = @openSpaceSettings ?? this.OpenSpaceSettings;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("Open Space Settings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public IList<OpenSpaceSettingsOverride> OpenSpaceSettings { get; set; } = new List<OpenSpaceSettingsOverride>();
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
+    
+    public partial class OpenSpaceSettingsOverride 
+    
+    {
+        [Newtonsoft.Json.JsonConstructor]
+        public OpenSpaceSettingsOverride(string @id, OpenSpaceSettingsIdentity @identity, OpenSpaceSettingsValue @value)
+        {
+            var validator = Validator.Instance.GetFirstValidatorForType<OpenSpaceSettingsOverride>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @id, @identity, @value});
+            }
+        
+            this.Id = @id;
+            this.Identity = @identity;
+            this.Value = @value;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Identity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public OpenSpaceSettingsIdentity Identity { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Value", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public OpenSpaceSettingsValue Value { get; set; }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
+    
+    public partial class OpenSpaceSettingsIdentity 
+    
+    {
+        [Newtonsoft.Json.JsonConstructor]
+        public OpenSpaceSettingsIdentity(Vector3 @parentCentroid)
+        {
+            var validator = Validator.Instance.GetFirstValidatorForType<OpenSpaceSettingsIdentity>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @parentCentroid});
+            }
+        
+            this.ParentCentroid = @parentCentroid;
+        
+            if(validator != null)
+            {
+                validator.PostConstruct(this);
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("ParentCentroid", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Vector3 ParentCentroid { get; set; }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
+    
+    public partial class OpenSpaceSettingsValue 
+    
+    {
+        [Newtonsoft.Json.JsonConstructor]
+        public OpenSpaceSettingsValue(OpenSpaceSettingsValueLayout @layout, double @aisle, double @gap, double @forward, double @backward, double @inset, int @rotation, bool @showPattern)
+        {
+            var validator = Validator.Instance.GetFirstValidatorForType<OpenSpaceSettingsValue>();
+            if(validator != null)
+            {
+                validator.PreConstruct(new object[]{ @layout, @aisle, @gap, @forward, @backward, @inset, @rotation, @showPattern});
+            }
+        
             this.Layout = @layout;
             this.Aisle = @aisle;
             this.Gap = @gap;
             this.Forward = @forward;
             this.Backward = @backward;
             this.Inset = @inset;
+            this.Rotation = @rotation;
             this.ShowPattern = @showPattern;
         
             if(validator != null)
@@ -81,16 +216,10 @@ namespace OpenLayoutDemo
             }
         }
     
-        /// <summary>Select the Rhino model category to work with</summary>
-        [Newtonsoft.Json.JsonProperty("Category", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Category { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("Program", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Program { get; set; }
-    
         /// <summary>What layout strategy should be used?</summary>
         [Newtonsoft.Json.JsonProperty("Layout", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Layout { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public OpenSpaceSettingsValueLayout Layout { get; set; } = OpenSpaceSettingsValueLayout.Row;
     
         [Newtonsoft.Json.JsonProperty("Aisle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
@@ -112,16 +241,23 @@ namespace OpenLayoutDemo
         [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
         public double Inset { get; set; } = 0D;
     
+        [Newtonsoft.Json.JsonProperty("Rotation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
+        public int Rotation { get; set; } = 0;
+    
         [Newtonsoft.Json.JsonProperty("Show Pattern", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool ShowPattern { get; set; } = false;
     
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    }
     
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties; }
-            set { _additionalProperties = value; }
-        }
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
+    public enum OpenSpaceSettingsValueLayout
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"Row")]
+        Row = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Cell")]
+        Cell = 1,
+    
     }
 }

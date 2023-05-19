@@ -27,7 +27,7 @@
           "$hyparStyle": "row",
           "properties": {
             "Category": {
-              "description": "Select the Rhino model category to work with",
+              "description": "Select the Rhino model category to work with.",
               "type": [
                 "string",
                 "null"
@@ -39,6 +39,7 @@
               }
             },
             "Program": {
+              "description": "Select the Space Planning Type to work within.",
               "type": [
                 "string",
                 "null"
@@ -48,102 +49,136 @@
                 "query": "[*discriminator=Elements.SpaceBoundary].Program Type",
                 "dependency": "Space Planning Zones"
               }
-            },
-            "Layout": {
-              "description": "What layout strategy should be used?",
-              "type": "string",
-              "$hyparAutocomplete": [
-                "Row",
-                "Cell"
-              ],
-              "$hyparOrder": 2
-            },
-            "Aisle": {
-              "type": "number",
-              "default": 2.0,
-              "minimum": 0.0,
-              "$hyparShowIf": {
-                "conditions": [
-                  {
-                    "property": "Layout",
-                    "value": "Row"
-                  }
-                ]
-              },
-              "$hyparOrder": 3
-            },
-            "Gap": {
-              "type": "number",
-              "default": 0.001,
-              "minimum": 0.001,
-              "$hyparShowIf": {
-                "conditions": [
-                  {
-                    "property": "Layout",
-                    "value": "Row"
-                  }
-                ]
-              },
-              "$hyparOrder": 4
-            },
-            "Forward": {
-              "type": "number",
-              "default": 0.0,
-              "minimum": 0.0,
-              "$hyparShowIf": {
-                "conditions": [
-                  {
-                    "property": "Layout",
-                    "value": "Row"
-                  }
-                ]
-              },
-              "$hyparOrder": 5
-            },
-            "Backward": {
-              "type": "number",
-              "default": 0.0,
-              "minimum": 0.0,
-              "$hyparShowIf": {
-                "conditions": [
-                  {
-                    "property": "Layout",
-                    "value": "Row"
-                  }
-                ]
-              },
-              "$hyparOrder": 6
-            },
-            "Inset": {
-              "type": "number",
-              "default": 0.0,
-              "minimum": 0.0,
-              "$hyparShowIf": {
-                "conditions": [
-                  {
-                    "property": "Layout",
-                    "value": "Row"
-                  }
-                ]
-              },
-              "$hyparOrder": 6
-            },
-            "Show Pattern": {
-              "type": "boolean",
-              "default": false,
-              "$hyparShowIf": {
-                "conditions": [
-                  {
-                    "property": "Layout",
-                    "value": "Row"
-                  }
-                ]
-              },
-              "$hyparOrder": 20
             }
           }
         }
       }
+    }
+  },
+  "overrides": {
+    "Open Space Settings": {
+      "dependency": "Space Planning Zones",
+      "context": "[*discriminator=Elements.SpaceBoundary&Name=Retail]",
+      "identity": {
+        "ParentCentroid": {
+          "$ref": "https://hypar.io/Schemas/Geometry/Vector3.json"
+        }
+      },
+      "paradigm": "edit",
+      "schema": {
+        "Layout": {
+          "description": "What layout strategy should be used?",
+          "type": "string",
+          "default": "Row",
+          "enum": [
+            "Row",
+            "Cell"
+          ],
+          "$hyparOrder": 2
+        },
+        "Aisle": {
+          "type": "number",
+          "default": 2.0,
+          "minimum": 0.0,
+          "$hyparShowIf": {
+            "conditions": [
+              {
+                "property": "Layout",
+                "value": "Row"
+              }
+            ]
+          },
+          "$hyparOrder": 3
+        },
+        "Gap": {
+          "type": "number",
+          "default": 0.001,
+          "minimum": 0.001,
+          "$hyparShowIf": {
+            "conditions": [
+              {
+                "property": "Layout",
+                "value": "Row"
+              }
+            ]
+          },
+          "$hyparOrder": 4
+        },
+        "Forward": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "$hyparShowIf": {
+            "conditions": [
+              {
+                "property": "Layout",
+                "value": "Row"
+              }
+            ]
+          },
+          "$hyparOrder": 5
+        },
+        "Backward": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "$hyparShowIf": {
+            "conditions": [
+              {
+                "property": "Layout",
+                "value": "Row"
+              }
+            ]
+          },
+          "$hyparOrder": 6
+        },
+        "Inset": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "$hyparShowIf": {
+            "conditions": [
+              {
+                "property": "Layout",
+                "value": "Row"
+              }
+            ]
+          },
+          "$hyparOrder": 7
+        },
+        "Rotation": {
+          "type": "integer",
+          "default": 0,
+          "minimum": 0,
+          "$hyparShowIf": {
+            "conditions": [
+              {
+                "property": "Layout",
+                "value": "Row"
+              }
+            ]
+          },
+          "$hyparOrder": 8
+        },
+        "Show Pattern": {
+          "type": "boolean",
+          "default": false,
+          "$hyparShowIf": {
+            "conditions": [
+              {
+                "property": "Layout",
+                "value": "Row"
+              }
+            ]
+          },
+          "$hyparOrder": 20
+        }
+      },
+      "verbs": {
+        "edit": null,
+        "revert": null
+      },
+      "default": {}
     }
   },
   "outputs": [

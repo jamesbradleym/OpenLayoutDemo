@@ -35,7 +35,19 @@ namespace OpenLayoutDemo
                     var roomBoundaries = spacePlanningZones.AllElementsOfType<SpaceBoundary>().Where(b => b.Name == extract.Program).ToList();
                     foreach (var room in roomBoundaries)
                     {
-                        var (layoutModel, layoutWarnings) = ApplyLayoutStrategy(extract.Layout, room, modelObject, obj, extract);
+                        OpenSpaceSettingsOverride overrides = null;
+                        var parentCentroid = room.AdditionalProperties["ParentCentroid"] as Newtonsoft.Json.Linq.JObject;
+                        if (parentCentroid != null)
+                        {
+                            var x = parentCentroid["X"].ToObject<double>();
+                            var y = parentCentroid["Y"].ToObject<double>();
+                            var z = parentCentroid["Z"].ToObject<double>();
+                            var vector = new Vector3(x, y, z);
+                            // use vector
+                            overrides = input.Overrides.OpenSpaceSettings.Where(x => x.Identity.ParentCentroid == vector).FirstOrDefault();
+                        }
+                        // var overridesBySpaceBoundaryId = GetOverridesBySpaceBoundaryId<SpaceSettingsOverride, SpaceBoundary, LevelElements>(input.Overrides?.SpaceSettings, (ov) => ov.Identity.ParentCentroid, levels);
+                        var (layoutModel, layoutWarnings) = ApplyLayoutStrategy(room, modelObject, obj, extract, overrides);
                         model.AddElements(layoutModel.Elements.Values);
                         warnings.AddRange(layoutWarnings);
                     }
@@ -48,42 +60,49 @@ namespace OpenLayoutDemo
             return output;
         }
 
-        private static (Model, List<string>) ApplyLayoutStrategy(string layoutStrategy, SpaceBoundary room, MeshElement modelObject, KeyValuePair<Guid, Element> obj, Extract extract)
+        private static (Model, List<string>) ApplyLayoutStrategy(SpaceBoundary room, MeshElement modelObject, KeyValuePair<Guid, Element> obj, Extract extract, OpenSpaceSettingsOverride overrides)
         {
-            switch (layoutStrategy)
+            if (overrides == null)
+            {
+                return ApplyRowLayout(room, modelObject, obj, extract, new OpenSpaceSettingsValue(OpenSpaceSettingsValueLayout.Row, 2.0, 0.001, 0.0, 0.0, 0.0, 0, false));
+            }
+            switch (overrides.Value.Layout.ToString())
             {
                 case "Row":
-                    return ApplyRowLayout(room, modelObject, obj, extract);
+                    return ApplyRowLayout(room, modelObject, obj, extract, overrides.Value);
                     break;
                 case "SomeOtherLayout":
                     return ApplySomeOtherLayout(room, modelObject, obj, extract);
                     break;
                 default:
                     // Handle unknown layout strategy
-                    return ApplyRowLayout(room, modelObject, obj, extract);
+                    return ApplyRowLayout(room, modelObject, obj, extract, overrides.Value);
                     break;
             }
         }
 
-        private static (Model, List<string>) ApplyRowLayout(SpaceBoundary room, MeshElement modelObject, KeyValuePair<Guid, Element> obj, Extract extract)
+        private static (Model, List<string>) ApplyRowLayout(SpaceBoundary room, MeshElement modelObject, KeyValuePair<Guid, Element> obj, Extract extract, OpenSpaceSettingsValue overrides)
         {
             var model = new Model();
             var warnings = new List<string>();
 
             var totalArea = 0.0;
-            var width = extract.Forward == 0.0 ? modelObject.Mesh.BoundingBox.Max.X - modelObject.Mesh.BoundingBox.Min.X : extract.Forward;
-            var depth = extract.Backward == 0.0 ? modelObject.Mesh.BoundingBox.Max.Y - modelObject.Mesh.BoundingBox.Min.Y : extract.Backward;
-            var gap = extract.Gap;
-            var aisle = extract.Aisle;
+            var width = overrides.Forward == 0.0 ? modelObject.Mesh.BoundingBox.Max.X - modelObject.Mesh.BoundingBox.Min.X : overrides.Forward;
+            var depth = overrides.Backward == 0.0 ? modelObject.Mesh.BoundingBox.Max.Y - modelObject.Mesh.BoundingBox.Min.Y : overrides.Backward;
+            var gap = overrides.Gap;
+            var aisle = overrides.Aisle;
 
             var profile = room.Boundary;
             totalArea += profile.Area();
             //inset from walls
-            var inset = profile.Perimeter.Offset(-extract.Inset);
+            var inset = profile.Perimeter.Offset(-overrides.Inset);
             Line longestEdge = null;
             try
             {
                 longestEdge = inset.SelectMany(s => s.Segments()).OrderBy(l => l.Length()).Last();
+                var rotation = new Transform(longestEdge.Start, Vector3.ZAxis, overrides.Rotation);// Create a rotation transform
+                // longestEdge = rotation.OfLine(longestEdge);
+                longestEdge = (Line)longestEdge.Transformed(rotation);
             }
             catch
             {
@@ -110,7 +129,7 @@ namespace OpenLayoutDemo
                 }
                 if (cell.Type == "Aisle")
                 {
-                    if (extract.ShowPattern)
+                    if (overrides.ShowPattern)
                     {
                         var t = new Transform(room.Transform);
                         t.Move(new Vector3(0, 0, 0.001));
@@ -119,7 +138,7 @@ namespace OpenLayoutDemo
                 }
                 else if (cell.Type == "Space")
                 {
-                    if (extract.ShowPattern)
+                    if (overrides.ShowPattern)
                     {
                         var t = new Transform(room.Transform);
                         t.Move(new Vector3(0, 0, 0.001));
@@ -128,7 +147,7 @@ namespace OpenLayoutDemo
                 }
                 else if (cell.Type == "Forward" && cellRect.Area().ApproximatelyEquals(width * depth, 0.01))
                 {
-                    if (extract.ShowPattern)
+                    if (overrides.ShowPattern)
                     {
                         var t = new Transform(room.Transform);
                         t.Move(new Vector3(0, 0, 0.001));
@@ -140,7 +159,7 @@ namespace OpenLayoutDemo
                 }
                 else if (cell.Type == "Backward" && cellRect.Area().ApproximatelyEquals(width * depth, 0.01))
                 {
-                    if (extract.ShowPattern)
+                    if (overrides.ShowPattern)
                     {
                         var t = new Transform(room.Transform);
                         t.Move(new Vector3(0, 0, 0.001));
